@@ -1,0 +1,106 @@
+<form [formGroup]="formGroup" class="container">
+    <div class="custom-form">
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Имя</mat-label>
+        <input [readonly]="componentType == 'view'" type="email" formControlName="aFirstName" [value]="formGroup.controls.aFirstName.value" matInput placeholder="Иван">
+        <mat-error *ngIf="formGroup.controls.aFirstName.hasError('required')">
+          Имя это <strong>обязательное поле</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Фамилия</mat-label>
+        <input [readonly]="componentType == 'view'" type="email" formControlName="aLastName" matInput placeholder="Иванов">
+        <mat-error *ngIf="formGroup.controls.aLastName.hasError('required')">
+          Фамилия это <strong>обязательное поле</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Отчество</mat-label>
+        <input [readonly]="componentType == 'view'" type="email" formControlName="aMiddleName" matInput placeholder="Иванович">
+        <mat-error *ngIf="formGroup.controls.aMiddleName.hasError('required')">
+          Отчество это <strong>обязательное поле</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+  <h1 style="float: left;">Автомобили</h1>
+  <button mat-raised-button
+          style="margin: 20px;"
+          *ngIf="componentType !== 'view'"
+          (click)="addVehicle()"
+          color="primary">Добавить автомобиль</button>
+  <div style="margin: 20px;" formArrayName="aCars" *ngFor="let car of aCars.controls; index as i" class="car-list">
+    <ng-container [formGroupName]="i">
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Номер</mat-label>
+        <input [readonly]="componentType == 'view'" formControlName="aNumber" matInput placeholder="AA 1111 AA">
+        <mat-error *ngIf="getValidity(i, 'aNumber', 'required')">
+          Номер это <strong>обязательное поле</strong>
+        </mat-error>
+        <mat-error *ngIf="getValidity(i, 'aNumber', 'pattern')">
+          Формат номера <strong>не правильный</strong>
+        </mat-error>
+        <mat-error *ngIf="getValidity(i, 'aNumber', 'existNumber')">
+          Автомобиль <strong>имеет</strong> владельца
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Марка</mat-label>
+        <input [readonly]="componentType == 'view'"
+               formControlName="aMake"
+               matInput
+               placeholder="BMW">
+        <mat-error *ngIf="getValidity(i, 'aMake', 'required')">
+          Марка это <strong>обязательное поле</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Модель</mat-label>
+        <input [readonly]="componentType == 'view'"
+               formControlName="aModel"
+               matInput
+               placeholder="X7">
+        <mat-error *ngIf="getValidity(i, 'aModel', 'required')">
+          Модель это <strong>обязательное поле</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Год</mat-label>
+        <input [readonly]="componentType == 'view'"
+               formControlName="aYear"
+               matInput
+               type="number"
+               placeholder="2022">
+        <mat-error *ngIf="getValidity(i, 'aYear', 'required')">
+          Год это <strong>обязательное поле</strong>
+        </mat-error>
+        <mat-error *ngIf="getValidity(i, 'aYear', 'maxlength')">
+          Введите <strong>год форматом</strong> YYYY
+        </mat-error>
+        <mat-error *ngIf="getValidity(i, 'aYear', 'min')">
+          Введите год <strong>не меньше</strong> 1990
+        </mat-error>
+        <mat-error *ngIf="getValidity(i, 'aYear', 'max')">
+          <strong>Нельзя</strong> добавить автомобиль из будущего
+        </mat-error>
+      </mat-form-field>
+      <button mat-raised-button
+              (click)="deleteVehicle(i)"
+              *ngIf="componentType !== 'view'"
+              color="primary">Удалить</button>
+    </ng-container>
+  </div>
+
+  <div class="custom-form__button">
+    <button mat-raised-button
+            *ngIf="componentType !== 'view'"
+            [disabled]="formGroup.invalid"
+            (click)="submitForm()"
+            color="primary">Отправить</button>
+    <button mat-raised-button routerLink="/" color="primary">Назад</button>
+  </div>
+</form>
